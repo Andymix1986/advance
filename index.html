@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-image: url('https://images2.imgbox.com/10/f8/RthFayiV_o.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        #video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            max-width: 800px;
+            max-height: 450px;
+        }
+        #video-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .logo-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .logo {
+            width: 100px;
+            height: auto;
+        }
+        .fullscreen-button {
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 10px 15px;
+            border: 1px solid #fff;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        .fullscreen-button:focus {
+            outline: none;
+            box-shadow: 0 0 5px 2px red;
+        }
+        .description {
+            margin-top: 20px;
+            text-align: center;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="video-container">
+        <iframe id="video-player" allow="encrypted-media" allowfullscreen frameborder="0" gesture="media" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" src="https://canalestudeporte.blogspot.com/2023/07/tlnovelas.html?m=1"></iframe>
+    </div>
+    <div class="description">
+        <p style="color: white;">Para cambiar el idioma ve al engranaje y luego al icono de los auriculares y elegi spanish.
+Si usas smartv  o tv box se recomienda usar un mouse para controlar mas facil  las funciones </p>
+    </div>
+    <div class="logo-container">
+        <img class="logo" src="https://images2.imgbox.com/99/c2/zUSzSLpI_o.png" alt="Logo">
+    </div>
+    <button class="fullscreen-button" onclick="toggleFullscreen()">Pantalla completa</button>
+    <script>
+        var videoPlayer = document.getElementById('video-player');
+
+        function toggleFullscreen() {
+            if (videoPlayer.requestFullscreen) {
+                videoPlayer.requestFullscreen();
+            } else if (videoPlayer.mozRequestFullScreen) {
+                videoPlayer.mozRequestFullScreen();
+            } else if (videoPlayer.webkitRequestFullscreen) {
+                videoPlayer.webkitRequestFullscreen();
+            } else if (videoPlayer.msRequestFullscreen) {
+                videoPlayer.msRequestFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>
