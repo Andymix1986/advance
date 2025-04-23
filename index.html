@@ -238,358 +238,61 @@ location.reload();
 });
 
 fetch(JSON_URL)
-.then(response => response.text())
-.then(data => {
-const decryptedData = xorDecrypt(decodeBase64(data), "andymix1986");
-const parsedData = JSON.parse(decryptedData);
-newVersionFromJson = parsedData.version;
-if (compareVersions(storedVersion, newVersionFromJson)) showPopup(parsedData.mensaje);
+  .then(response => response.text())
+  .then(data => {
+    const decryptedData = xorDecrypt(decodeBase64(data), "andymix1986");
+    const parsedData = JSON.parse(decryptedData);
+    newVersionFromJson = parsedData.version;
+    if (compareVersions(storedVersion, newVersionFromJson)) showPopup(parsedData.mensaje);
 
-const container = document.getElementById("sliders");
-const chunkSize = 7;
-for (let i = 0; i < parsedData.novelas.length; i += chunkSize) {
-const chunk = parsedData.novelas.slice(i, i + chunkSize);
-const slider = document.createElement("div");
-slider.className = "slider";
-slider.innerHTML = `<h2>Novelas</h2>`;
-const row = document.createElement("div");
-row.className = "slider-row";
-row.tabIndex = 0;
-chunk.forEach(novela => {
-const card = document.createElement("div");
-card.className = "card";
-card.tabIndex = 0;
-card.setAttribute("data-type", novela.tipo);
-card.setAttribute("data-base-url", novela.url);
-card.setAttribute("data-id", novela.id || "");
-card.setAttribute("data-titulo", novela.titulo || "");
-card.setAttribute("data-total", novela.total || "");
-const img = document.createElement("img");
-img.src = novela.imagen;
-img.alt = novela.titulo;
-img.loading = "lazy";
-const title = document.createElement("div");
-title.className = "card-title";
-title.textContent = novela.titulo;
-card.appendChild(img);
-card.appendChild(title);
-row.appendChild(card);
-});
-slider.appendChild(row);
-observer.observe(slider);
-container.appendChild(slider);
-}
-})
-.catch(error => console.error("Error cargando el archivo JSON:", error));
+    const container = document.getElementById("sliders");
+    const chunkSize = 7;
+    for (let i = 0; i < parsedData.novelas.length; i += chunkSize) {
+      const chunk = parsedData.novelas.slice(i, i + chunkSize);
+      const slider = document.createElement("div");
+      slider.className = "slider";
+      slider.innerHTML = `<h2>Novelas</h2>`;
+      const row = document.createElement("div");
+      row.className = "slider-row";
+      row.tabIndex = 0;
+      chunk.forEach(novela => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.tabIndex = 0;
+        card.setAttribute("data-type", novela.tipo);
+        card.setAttribute("data-base-url", novela.url);
+        card.setAttribute("data-id", novela.id || "");
+        card.setAttribute("data-titulo", novela.titulo || "");
+        card.setAttribute("data-total", novela.total || "");
+        const img = document.createElement("img");
+        img.src = novela.imagen;
+        img.alt = novela.titulo;
+        img.loading = "lazy";
+        const title = document.createElement("div");
+        title.className = "card-title";
+        title.textContent = novela.titulo;
+        card.appendChild(img);
+        card.appendChild(title);
+        row.appendChild(card);
+      });
+      slider.appendChild(row);
+      observer.observe(slider);
+      container.appendChild(slider);
+    }
+  })
+  .catch(error => console.error("Error cargando el archivo JSON:", error));
 
 // Función que muestra el pop-up con el mensaje
 function showPopup(message) {
-const popupMessage = document.querySelector("#popup h2");  // Obtén el elemento <h2> dentro del pop-up
-popupMessage.textContent = message;  // Actualiza el contenido del mensaje
-document.getElementById("popupOverlay").style.display = "flex";  // Muestra el pop-up
+  const popupMessage = document.querySelector("#popup h2");  // Obtén el elemento <h2> dentro del pop-up
+  popupMessage.textContent = message;  // Actualiza el contenido del mensaje
+  document.getElementById("popupOverlay").style.display = "flex";  // Muestra el pop-up
 }
 
 // Cuando se hace clic en el botón "Actualizar"
 document.getElementById("updateButton").addEventListener("click", () => {
-localStorage.setItem('version', newVersionFromJson);
-location.reload();
-});
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>King Play</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body {
-margin: 0;
-background-color: #000;
-font-family: sans-serif;
-color: #fff;
-overflow-x: hidden;
-}
-
-.carousel-wrapper {
-display: flex;
-justify-content: center;
-margin-top: 20px;
-}
-.carousel-container {
-width: 90%;
-aspect-ratio: 16 / 9;
-border-radius: 20px;
-overflow: hidden;
-position: relative;
-background: #000;
-}
-
-.carousel-image {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-object-fit: cover;
-opacity: 0;
-transition: opacity 1s ease-in-out;
-z-index: 0;
-}
-
-.carousel-image.active {
-opacity: 1;
-z-index: 1;
-}
-
-.slider {
-margin: 30px 0;
-padding: 0 20px;
-}
-
-.slider h2 {
-font-size: 1.5rem;
-margin-bottom: 10px;
-}
-
-.slider-row {
-display: flex;
-overflow-x: auto;
-gap: 24px;
-scroll-behavior: smooth;
-outline: none;
-}
-.slider-row .card:first-child {
-margin-left: 20px;
-}
-
-.slider-row .card:last-child {
-margin-right: 20px;
-}
-
-.slider-row .card {
-margin-top: 20px;
-margin-bottom: 20px;
-}
-
-.card {
-flex: 0 0 auto;
-width: 160px;
-height: 240px;
-background-color: #222;
-border-radius: 12px;
-overflow: hidden;
-position: relative;
-transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card img {
-width: 100%;
-height: 100%;
-object-fit: cover;
-}
-
-.card:focus {
-outline: none;
-transform: scale(1.05);
-box-shadow: 0 0 20px 4px #00bfff;
-z-index: 2;
-}
-
-.card-title {
-position: absolute;
-bottom: 0;
-background: rgba(0, 0, 0, 0.7);
-width: 100%;
-text-align: center;
-font-size: 0.9rem;
-padding: 4px;
-}
-
-/* Fondo semitransparente */
-.popup-overlay {
-position: fixed;
-top: 0;
-left: 0;
-width: 100vw;
-height: 100vh;
-background: rgba(0, 0, 0, 0.6);
-display: none;
-justify-content: center;
-align-items: center;
-z-index: 9;
-}
-
-/* Pop-up */
-.popup {
-width: 60%;
-aspect-ratio: 16 / 9;
-background-color: rgba(34, 34, 34, 0.85);
-border-radius: 12px;
-box-shadow: 0 0 20px 5px rgba(0, 191, 255, 0.5);
-display: flex;
-justify-content: center;
-align-items: center;
-flex-direction: column;
-padding: 20px;
-text-align: center;
-z-index: 10;
-}
-
-.popup h2 {
-color: #fff;
-font-size: 1.5rem;
-}
-
-.popup button {
-background-color: #00bfff;
-border: none;
-padding: 10px 20px;
-font-size: 1rem;
-color: white;
-border-radius: 8px;
-margin-top: 20px;
-cursor: pointer;
-outline: none;
-}
-
-.popup button:focus {
-box-shadow: 0 0 10px 2px #00bfff;
-}
-
-.popup button:hover {
-background-color: #0099cc;
-}
-
-button:focus {
-outline: none;
-}
-</style>
-</head>
-<body>
-
-<!-- Carrusel -->
-<div class="carousel-wrapper">
-<div class="carousel-container" id="carousel-container">
-<img class="carousel-image active" src="https://images2.imgbox.com/41/0a/d5N9fJDY_o.jpg" alt="Carrusel 1" loading="lazy">
-<img class="carousel-image" src="https://images2.imgbox.com/51/6e/9xuKLLlO_o.jpg" alt="Carrusel 2" loading="lazy">
-<img class="carousel-image" src="https://images2.imgbox.com/87/ce/T0um6IwN_o.jpg" alt="Carrusel 3" loading="lazy">
-</div>
-</div>
-
-<!-- Pop-up de actualización -->
-<div class="popup-overlay" id="popupOverlay">
-<div class="popup" id="popup">
-<h2>Hay una nueva versión disponible</h2>
-<button id="updateButton">Actualizar</button>
-</div>
-</div>
-
-<!-- Contenedor de sliders -->
-<div id="sliders"></div>
-
-<script>
-// Carrusel con una sola imagen activa
-let current = 0;
-const images = document.querySelectorAll(".carousel-image");
-setInterval(() => {
-images[current].classList.remove("active");
-current = (current + 1) % images.length;
-images[current].classList.add("active");
-}, 4000);
-
-// Funciones XOR + Base64
-function xorDecrypt(input, key) {
-let output = '';
-for (let i = 0; i < input.length; i++) {
-const charCode = input.charCodeAt(i) ^ key.charCodeAt(i % key.length);
-output += String.fromCharCode(charCode);
-}
-return output;
-}
-
-function decodeBase64(input) {
-return atob(input);
-}
-
-const JSON_URL = "https://raw.githubusercontent.com/Andymix1986/king-play/refs/heads/main/novelas.json";
-const storedVersion = localStorage.getItem('version') || '1.0.0';
-let newVersionFromJson = storedVersion;
-
-function compareVersions(currentVersion, newVersion) {
-const current = currentVersion.split('.').map(Number);
-const next = newVersion.split('.').map(Number);
-for (let i = 0; i < 3; i++) {
-if (next[i] > current[i]) return true;
-if (next[i] < current[i]) return false;
-}
-return false;
-}
-
-function showPopup() {
-document.getElementById("popupOverlay").style.display = "flex";
-}
-
-document.getElementById("updateButton").addEventListener("click", () => {
-localStorage.setItem('version', newVersionFromJson);
-location.reload();
-});
-
-fetch(JSON_URL)
-.then(response => response.text())
-.then(data => {
-const decryptedData = xorDecrypt(decodeBase64(data), "andymix1986");
-const parsedData = JSON.parse(decryptedData);
-newVersionFromJson = parsedData.version;
-if (compareVersions(storedVersion, newVersionFromJson)) showPopup(parsedData.mensaje);
-
-const container = document.getElementById("sliders");
-const chunkSize = 7;
-for (let i = 0; i < parsedData.novelas.length; i += chunkSize) {
-const chunk = parsedData.novelas.slice(i, i + chunkSize);
-const slider = document.createElement("div");
-slider.className = "slider";
-slider.innerHTML = `<h2>Novelas</h2>`;
-const row = document.createElement("div");
-row.className = "slider-row";
-row.tabIndex = 0;
-chunk.forEach(novela => {
-const card = document.createElement("div");
-card.className = "card";
-card.tabIndex = 0;
-card.setAttribute("data-type", novela.tipo);
-card.setAttribute("data-base-url", novela.url);
-card.setAttribute("data-id", novela.id || "");
-card.setAttribute("data-titulo", novela.titulo || "");
-card.setAttribute("data-total", novela.total || "");
-const img = document.createElement("img");
-img.src = novela.imagen;
-img.alt = novela.titulo;
-img.loading = "lazy";
-const title = document.createElement("div");
-title.className = "card-title";
-title.textContent = novela.titulo;
-card.appendChild(img);
-card.appendChild(title);
-row.appendChild(card);
-});
-slider.appendChild(row);
-observer.observe(slider);
-container.appendChild(slider);
-}
-})
-.catch(error => console.error("Error cargando el archivo JSON:", error));
-
-// Función que muestra el pop-up con el mensaje
-function showPopup(message) {
-const popupMessage = document.querySelector("#popup h2");  // Obtén el elemento <h2> dentro del pop-up
-popupMessage.textContent = message;  // Actualiza el contenido del mensaje
-document.getElementById("popupOverlay").style.display = "flex";  // Muestra el pop-up
-}
-
-// Cuando se hace clic en el botón "Actualizar"
-document.getElementById("updateButton").addEventListener("click", () => {
-localStorage.setItem('version', newVersionFromJson);
-location.reload();
+  localStorage.setItem('version', newVersionFromJson);
+  location.reload();
 });
 
 document.addEventListener("click", (e) => {
@@ -601,7 +304,7 @@ document.addEventListener("click", (e) => {
       const id = card.getAttribute('data-id');
       const titulo = card.getAttribute('data-titulo');
       const total = card.getAttribute('data-total');
-      // Cambiar la URL a la externa en lugar del archivo local
+      // Cambiar la URL para abrir el archivo desde la URL externa
       const externalUrl = `https://andymix1986.github.io/KING-PLAYER-ONLINE/player_0000.html?urlbase=${encodeURIComponent(baseUrl)}&id=${id}&titulo=${encodeURIComponent(titulo)}&total=${total}`;
       window.location.href = externalUrl; // Redirige a la URL externa
     } else if (type === "EXT") {
@@ -611,6 +314,25 @@ document.addEventListener("click", (e) => {
   }
 });
 
+
+// Lazy load con IntersectionObserver
+const observer = new IntersectionObserver(entries => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('visible');
+observer.unobserve(entry.target);
+}
+});
+}, {
+threshold: 0.1
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+const sliders = document.querySelectorAll(".slider-row");
+sliders.forEach(slider => {
+observer.observe(slider);
+});
+});
 </script>
 </body>
 </html>
