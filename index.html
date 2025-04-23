@@ -166,6 +166,10 @@ background-color: #0099cc;
 button:focus {
 outline: none;
 }
+/* Lazy Load - quitar opacidad */
+.slider-row {
+opacity: 1 !important;
+}
 </style>
 </head>
 <body>
@@ -238,82 +242,81 @@ location.reload();
 });
 
 fetch(JSON_URL)
-  .then(response => response.text())
-  .then(data => {
-    const decryptedData = xorDecrypt(decodeBase64(data), "andymix1986");
-    const parsedData = JSON.parse(decryptedData);
-    newVersionFromJson = parsedData.version;
-    if (compareVersions(storedVersion, newVersionFromJson)) showPopup(parsedData.mensaje);
+.then(response => response.text())
+.then(data => {
+const decryptedData = xorDecrypt(decodeBase64(data), "andymix1986");
+const parsedData = JSON.parse(decryptedData);
+newVersionFromJson = parsedData.version;
+if (compareVersions(storedVersion, newVersionFromJson)) showPopup(parsedData.mensaje);
 
-    const container = document.getElementById("sliders");
-    const chunkSize = 7;
-    for (let i = 0; i < parsedData.novelas.length; i += chunkSize) {
-      const chunk = parsedData.novelas.slice(i, i + chunkSize);
-      const slider = document.createElement("div");
-      slider.className = "slider";
-      slider.innerHTML = `<h2>Novelas</h2>`;
-      const row = document.createElement("div");
-      row.className = "slider-row";
-      row.tabIndex = 0;
-      chunk.forEach(novela => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.tabIndex = 0;
-        card.setAttribute("data-type", novela.tipo);
-        card.setAttribute("data-base-url", novela.url);
-        card.setAttribute("data-id", novela.id || "");
-        card.setAttribute("data-titulo", novela.titulo || "");
-        card.setAttribute("data-total", novela.total || "");
-        const img = document.createElement("img");
-        img.src = novela.imagen;
-        img.alt = novela.titulo;
-        img.loading = "lazy";
-        const title = document.createElement("div");
-        title.className = "card-title";
-        title.textContent = novela.titulo;
-        card.appendChild(img);
-        card.appendChild(title);
-        row.appendChild(card);
-      });
-      slider.appendChild(row);
-      observer.observe(slider);
-      container.appendChild(slider);
-    }
-  })
-  .catch(error => console.error("Error cargando el archivo JSON:", error));
+const container = document.getElementById("sliders");
+const chunkSize = 7;
+for (let i = 0; i < parsedData.novelas.length; i += chunkSize) {
+const chunk = parsedData.novelas.slice(i, i + chunkSize);
+const slider = document.createElement("div");
+slider.className = "slider";
+slider.innerHTML = `<h2>Novelas</h2>`;
+const row = document.createElement("div");
+row.className = "slider-row";
+row.tabIndex = 0;
+chunk.forEach(novela => {
+const card = document.createElement("div");
+card.className = "card";
+card.tabIndex = 0;
+card.setAttribute("data-type", novela.tipo);
+card.setAttribute("data-base-url", novela.url);
+card.setAttribute("data-id", novela.id || "");
+card.setAttribute("data-titulo", novela.titulo || "");
+card.setAttribute("data-total", novela.total || "");
+const img = document.createElement("img");
+img.src = novela.imagen;
+img.alt = novela.titulo;
+img.loading = "lazy";
+const title = document.createElement("div");
+title.className = "card-title";
+title.textContent = novela.titulo;
+card.appendChild(img);
+card.appendChild(title);
+row.appendChild(card);
+});
+slider.appendChild(row);
+observer.observe(slider);
+container.appendChild(slider);
+}
+})
+.catch(error => console.error("Error cargando el archivo JSON:", error));
 
 // Función que muestra el pop-up con el mensaje
 function showPopup(message) {
-  const popupMessage = document.querySelector("#popup h2");  // Obtén el elemento <h2> dentro del pop-up
-  popupMessage.textContent = message;  // Actualiza el contenido del mensaje
-  document.getElementById("popupOverlay").style.display = "flex";  // Muestra el pop-up
+const popupMessage = document.querySelector("#popup h2");  // Obtén el elemento <h2> dentro del pop-up
+popupMessage.textContent = message;  // Actualiza el contenido del mensaje
+document.getElementById("popupOverlay").style.display = "flex";  // Muestra el pop-up
 }
 
 // Cuando se hace clic en el botón "Actualizar"
 document.getElementById("updateButton").addEventListener("click", () => {
-  localStorage.setItem('version', newVersionFromJson);
-  location.reload();
+localStorage.setItem('version', newVersionFromJson);
+location.reload();
 });
 
 document.addEventListener("click", (e) => {
-  const card = e.target.closest('.card');
-  if (card) {
-    const type = card.getAttribute('data-type');
-    if (type === "LOC") {
-      const baseUrl = card.getAttribute('data-base-url');
-      const id = card.getAttribute('data-id');
-      const titulo = card.getAttribute('data-titulo');
-      const total = card.getAttribute('data-total');
-      // Cambiar la URL para abrir el archivo desde la URL externa
-      const externalUrl = `https://andymix1986.github.io/KING-PLAYER-ONLINE/player_0000.html?urlbase=${encodeURIComponent(baseUrl)}&id=${id}&titulo=${encodeURIComponent(titulo)}&total=${total}`;
-      window.location.href = externalUrl; // Redirige a la URL externa
-    } else if (type === "EXT") {
-      const externalUrl = card.getAttribute('data-base-url');
-      window.location.href = externalUrl;
-    }
-  }
+const card = e.target.closest('.card');
+if (card) {
+const type = card.getAttribute('data-type');
+if (type === "LOC") {
+const baseUrl = card.getAttribute('data-base-url');
+const id = card.getAttribute('data-id');
+const titulo = card.getAttribute('data-titulo');
+const total = card.getAttribute('data-total');
+const localUrl = "player_0000.html";
+const fileUrl = `file:///android_asset/${localUrl}?urlbase=${encodeURIComponent(baseUrl)}&id=${id}&titulo=${encodeURIComponent(titulo)}&total=${total}`;
+window.location.href = fileUrl;
+} else if (type === "EXT") {
+const externalUrl = card.getAttribute('data-base-url');
+window.location.href = externalUrl;
+}
+}
 });
-
 
 // Lazy load con IntersectionObserver
 const observer = new IntersectionObserver(entries => {
