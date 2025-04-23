@@ -611,18 +611,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-
-// Lazy load visible sliders
-const observer = new IntersectionObserver((entries) => {
-entries.forEach(entry => {
-if (entry.isIntersecting) {
-entry.target.style.opacity = '1';
-} else {
-entry.target.style.opacity = '0.1';
-}
-});
-}, { threshold: 0.1 });
-
 </script>
 </body>
 </html>
