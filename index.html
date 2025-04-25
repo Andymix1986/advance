@@ -193,36 +193,34 @@ opacity: 1 !important;
 
 <!-- Contenedor de sliders -->
 <div id="sliders"></div>
-<!-- Overlay de carga -->
-<div id="loadingOverlay" style="display:none;">
-  <div style="color: white; text-align: center;">
-    <p>Por favor espera mientras se carga el anuncio...</p>
-    <button id="continueBtn" style="display:none;">Abrir reproductor ahora</button>
-  </div>
+<!-- Banner de OnclickA al final de la página -->
+<div id="banner-onclicka" style="width: 100%; text-align: center; margin-top: 40px;">
+  <script async src="https://js.onclckmn.com/static/onclicka.js" data-admpid="322235"></script>
 </div>
+</body>
 
 <script>
 // Carrusel con una sola imagen activa
 let current = 0;
 const images = document.querySelectorAll(".carousel-image");
 setInterval(() => {
-  images[current].classList.remove("active");
-  current = (current + 1) % images.length;
-  images[current].classList.add("active");
+images[current].classList.remove("active");
+current = (current + 1) % images.length;
+images[current].classList.add("active");
 }, 4000);
 
 // Funciones XOR + Base64
 function xorDecrypt(input, key) {
-  let output = '';
-  for (let i = 0; i < input.length; i++) {
-    const charCode = input.charCodeAt(i) ^ key.charCodeAt(i % key.length);
-    output += String.fromCharCode(charCode);
-  }
-  return output;
+let output = '';
+for (let i = 0; i < input.length; i++) {
+const charCode = input.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+output += String.fromCharCode(charCode);
+}
+return output;
 }
 
 function decodeBase64(input) {
-  return atob(input);
+return atob(input);
 }
 
 const JSON_URL = "https://raw.githubusercontent.com/Andymix1986/king-play/refs/heads/main/novelas.json";
@@ -230,151 +228,121 @@ const storedVersion = localStorage.getItem('version') || '1.0.0';
 let newVersionFromJson = storedVersion;
 
 function compareVersions(currentVersion, newVersion) {
-  const current = currentVersion.split('.').map(Number);
-  const next = newVersion.split('.').map(Number);
-  for (let i = 0; i < 3; i++) {
-    if (next[i] > current[i]) return true;
-    if (next[i] < current[i]) return false;
-  }
-  return false;
+const current = currentVersion.split('.').map(Number);
+const next = newVersion.split('.').map(Number);
+for (let i = 0; i < 3; i++) {
+if (next[i] > current[i]) return true;
+if (next[i] < current[i]) return false;
+}
+return false;
 }
 
 function showPopup() {
-  document.getElementById("popupOverlay").style.display = "flex";
+document.getElementById("popupOverlay").style.display = "flex";
 }
 
 document.getElementById("updateButton").addEventListener("click", () => {
-  localStorage.setItem('version', newVersionFromJson);
-  location.reload();
+localStorage.setItem('version', newVersionFromJson);
+location.reload();
 });
-  
-document.addEventListener("DOMContentLoaded", function () {
-  // Esta función se asegura de que el DOM esté cargado antes de continuar.
 
-  fetch(JSON_URL)
-  .then(response => response.text())
-  .then(data => {
-    const decryptedData = xorDecrypt(decodeBase64(data), "andymix1986");
-    const parsedData = JSON.parse(decryptedData);
-    newVersionFromJson = parsedData.version;
-    if (compareVersions(storedVersion, newVersionFromJson)) showPopup(parsedData.mensaje);
+fetch(JSON_URL)
+.then(response => response.text())
+.then(data => {
+const decryptedData = xorDecrypt(decodeBase64(data), "andymix1986");
+const parsedData = JSON.parse(decryptedData);
+newVersionFromJson = parsedData.version;
+if (compareVersions(storedVersion, newVersionFromJson)) showPopup(parsedData.mensaje);
 
-    const container = document.getElementById("sliders");
-    const chunkSize = 7;
-    for (let i = 0; i < parsedData.novelas.length; i += chunkSize) {
-      const chunk = parsedData.novelas.slice(i, i + chunkSize);
-      const slider = document.createElement("div");
-      slider.className = "slider";
-      slider.innerHTML = `<h2>Novelas</h2>`;
-      const row = document.createElement("div");
-      row.className = "slider-row";
-      row.tabIndex = 0;
-      chunk.forEach(novela => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.tabIndex = 0;
-        card.setAttribute("data-type", novela.tipo);
-        card.setAttribute("data-base-url", novela.url);
-        card.setAttribute("data-id", novela.id || "");
-        card.setAttribute("data-titulo", novela.titulo || "");
-        card.setAttribute("data-total", novela.total || "");
-        const img = document.createElement("img");
-        img.src = novela.imagen;
-        img.alt = novela.titulo;
-        img.loading = "lazy";
-        const title = document.createElement("div");
-        title.className = "card-title";
-        title.textContent = novela.titulo;
-        card.appendChild(img);
-        card.appendChild(title);
-        row.appendChild(card);
-      });
-      slider.appendChild(row);
-      container.appendChild(slider);
-    }
-  })
-  .catch(error => console.error("Error cargando el archivo JSON:", error));
+const container = document.getElementById("sliders");
+const chunkSize = 7;
+for (let i = 0; i < parsedData.novelas.length; i += chunkSize) {
+const chunk = parsedData.novelas.slice(i, i + chunkSize);
+const slider = document.createElement("div");
+slider.className = "slider";
+slider.innerHTML = `<h2>Novelas</h2>`;
+const row = document.createElement("div");
+row.className = "slider-row";
+row.tabIndex = 0;
+chunk.forEach(novela => {
+const card = document.createElement("div");
+card.className = "card";
+card.tabIndex = 0;
+card.setAttribute("data-type", novela.tipo);
+card.setAttribute("data-base-url", novela.url);
+card.setAttribute("data-id", novela.id || "");
+card.setAttribute("data-titulo", novela.titulo || "");
+card.setAttribute("data-total", novela.total || "");
+const img = document.createElement("img");
+img.src = novela.imagen;
+img.alt = novela.titulo;
+img.loading = "lazy";
+const title = document.createElement("div");
+title.className = "card-title";
+title.textContent = novela.titulo;
+card.appendChild(img);
+card.appendChild(title);
+row.appendChild(card);
+});
+slider.appendChild(row);
+observer.observe(slider);
+container.appendChild(slider);
+}
+})
+.catch(error => console.error("Error cargando el archivo JSON:", error));
 
 // Función que muestra el pop-up con el mensaje
 function showPopup(message) {
-  const popupMessage = document.querySelector("#popup h2");
-  popupMessage.textContent = message;
-  document.getElementById("popupOverlay").style.display = "flex";
+const popupMessage = document.querySelector("#popup h2");  // Obtén el elemento <h2> dentro del pop-up
+popupMessage.textContent = message;  // Actualiza el contenido del mensaje
+document.getElementById("popupOverlay").style.display = "flex";  // Muestra el pop-up
 }
 
 // Cuando se hace clic en el botón "Actualizar"
 document.getElementById("updateButton").addEventListener("click", () => {
-  localStorage.setItem('version', newVersionFromJson);
-  location.reload();
+localStorage.setItem('version', newVersionFromJson);
+location.reload();
 });
 
-// Abre el enlace al player
-document.addEventListener("click", (e) => {
-  document.body.addEventListener("click", function (e) {
-    const card = e.target.closest('.card');
-    if (!card) return;
-
-    const type = card.getAttribute('data-type');
-    const overlay = document.getElementById("loadingOverlay");
-    const continueBtn = document.getElementById("continueBtn");
-
-    // Mostrar el overlay
-    overlay.style.display = "flex";
-
-    // Ocultar el botón inicialmente
-    continueBtn.style.display = "none";
-
-    // Abrir anuncio en nueva pestaña
-    window.open("https://example.adterra.link", "_blank");
-
-    // Mostrar el botón después de 5 segundos
-    setTimeout(() => {
-      continueBtn.style.display = "block";
-    }, 5000);
-
-    // Configurar lo que pasa cuando el usuario hace clic en el botón
-    continueBtn.onclick = () => {
-      if (type === "LOC") {
-        const baseUrl = card.getAttribute('data-base-url');
-        const id = card.getAttribute('data-id');
-        const titulo = card.getAttribute('data-titulo');
-        const total = card.getAttribute('data-total');
-
-        const url = `https://andymix1986.github.io/KING-PLAYER-ONLINE/player_0000.html?urlbase=${encodeURIComponent(baseUrl)}&id=${id}&titulo=${encodeURIComponent(titulo)}&total=${total}`;
-        window.location.href = url;
-      } else if (type === "EXT") {
-        const externalUrl = card.getAttribute('data-base-url');
-        window.location.href = externalUrl;
-      }
-
-      // Ocultar el overlay después de la acción
-      overlay.style.display = "none";
-    };
-
-    // Ocultar el overlay después de 15 segundos (si no se hizo clic)
-    setTimeout(() => {
-      overlay.style.display = "none";
-    }, 15000);
-  });
+    // Abre el enlace al player
+    document.addEventListener("click", (e) => {
+  const card = e.target.closest('.card');
+  if (card) {
+    const type = card.getAttribute('data-type');
+    if (type === "LOC") {
+      const baseUrl = card.getAttribute('data-base-url');
+      const id = card.getAttribute('data-id');
+      const titulo = card.getAttribute('data-titulo');
+      const total = card.getAttribute('data-total');
+      // Cambiar la URL a la externa en lugar del archivo local
+      const externalUrl = `https://andymix1986.github.io/KING-PLAYER-ONLINE/player_0000.html?urlbase=${encodeURIComponent(baseUrl)}&id=${id}&titulo=${encodeURIComponent(titulo)}&total=${total}`;
+      window.location.href = externalUrl; // Redirige a la URL externa
+    } else if (type === "EXT") {
+      const externalUrl = card.getAttribute('data-base-url');
+      window.location.href = externalUrl;
+    }
+  }
 });
+
 // Lazy load con IntersectionObserver
 const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      observer.unobserve(entry.target);
-    }
-  });
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('visible');
+observer.unobserve(entry.target);
+}
+});
 }, {
-  threshold: 0.1
+threshold: 0.1
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  const sliders = document.querySelectorAll(".slider-row");
-  sliders.forEach(slider => {
-    observer.observe(slider);
-  });
+const sliders = document.querySelectorAll(".slider-row");
+sliders.forEach(slider => {
+observer.observe(slider);
+});
 });
 </script>
 </body>
 </html>
+
