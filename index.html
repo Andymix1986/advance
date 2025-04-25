@@ -247,8 +247,11 @@ document.getElementById("updateButton").addEventListener("click", () => {
   localStorage.setItem('version', newVersionFromJson);
   location.reload();
 });
+  
+document.addEventListener("DOMContentLoaded", function () {
+  // Esta función se asegura de que el DOM esté cargado antes de continuar.
 
-fetch(JSON_URL)
+  fetch(JSON_URL)
   .then(response => response.text())
   .then(data => {
     const decryptedData = xorDecrypt(decodeBase64(data), "andymix1986");
@@ -308,7 +311,6 @@ document.getElementById("updateButton").addEventListener("click", () => {
 
 // Abre el enlace al player
 document.addEventListener("click", (e) => {
-document.addEventListener("DOMContentLoaded", function () {
   document.body.addEventListener("click", function (e) {
     const card = e.target.closest('.card');
     if (!card) return;
