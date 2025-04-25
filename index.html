@@ -308,23 +308,54 @@ document.getElementById("updateButton").addEventListener("click", () => {
 
 // Abre el enlace al player
 document.addEventListener("click", (e) => {
-  const card = e.target.closest('.card');
-  if (card) {
-    const type = card.getAttribute('data-type');
-    if (type === "LOC") {
-      const baseUrl = card.getAttribute('data-base-url');
-      const id = card.getAttribute('data-id');
-      const titulo = card.getAttribute('data-titulo');
-      const total = card.getAttribute('data-total');
-      const externalUrl = `https://andymix1986.github.io/KING-PLAYER-ONLINE/player_0000.html?urlbase=${encodeURIComponent(baseUrl)}&id=${id}&titulo=${encodeURIComponent(titulo)}&total=${total}`;
-      window.location.href = externalUrl;
-    } else if (type === "EXT") {
-      const externalUrl = card.getAttribute('data-base-url');
-      window.location.href = externalUrl;
-    }
-  }
-});
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.addEventListener("click", function (e) {
+    const card = e.target.closest('.card');
+    if (!card) return;
 
+    const type = card.getAttribute('data-type');
+    const overlay = document.getElementById("loadingOverlay");
+    const continueBtn = document.getElementById("continueBtn");
+
+    // Mostrar el overlay
+    overlay.style.display = "flex";
+
+    // Ocultar el botón inicialmente
+    continueBtn.style.display = "none";
+
+    // Abrir anuncio en nueva pestaña
+    window.open("https://example.adterra.link", "_blank");
+
+    // Mostrar el botón después de 5 segundos
+    setTimeout(() => {
+      continueBtn.style.display = "block";
+    }, 5000);
+
+    // Configurar lo que pasa cuando el usuario hace clic en el botón
+    continueBtn.onclick = () => {
+      if (type === "LOC") {
+        const baseUrl = card.getAttribute('data-base-url');
+        const id = card.getAttribute('data-id');
+        const titulo = card.getAttribute('data-titulo');
+        const total = card.getAttribute('data-total');
+
+        const url = `https://andymix1986.github.io/KING-PLAYER-ONLINE/player_0000.html?urlbase=${encodeURIComponent(baseUrl)}&id=${id}&titulo=${encodeURIComponent(titulo)}&total=${total}`;
+        window.location.href = url;
+      } else if (type === "EXT") {
+        const externalUrl = card.getAttribute('data-base-url');
+        window.location.href = externalUrl;
+      }
+
+      // Ocultar el overlay después de la acción
+      overlay.style.display = "none";
+    };
+
+    // Ocultar el overlay después de 15 segundos (si no se hizo clic)
+    setTimeout(() => {
+      overlay.style.display = "none";
+    }, 15000);
+  });
+});
 // Lazy load con IntersectionObserver
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
