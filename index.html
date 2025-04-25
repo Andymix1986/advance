@@ -319,34 +319,34 @@ location.reload();
 });
 
     document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener("click", function (e) {
-      const type = card.getAttribute('data-type');
-      const overlay = document.getElementById("loadingOverlay");
-      overlay.style.display = "flex";
+  document.addEventListener("click", function (e) {
+    const card = e.target.closest('.card');
+    if (!card) return; // solo sigue si clickeaste una .card
 
-      // Abre el anuncio en una pestaña nueva
-      window.open("https://www.highcpmrevenue.com/redirect/123456", "_blank");
+    const type = card.getAttribute('data-type');
+    const overlay = document.getElementById("loadingOverlay");
+    overlay.style.display = "flex";
 
-      setTimeout(() => {
-        if (type === "LOC") {
-          const baseUrl = card.getAttribute('data-base-url');
-          const id = card.getAttribute('data-id');
-          const titulo = card.getAttribute('data-titulo');
-          const total = card.getAttribute('data-total');
+    window.open("https://www.highcpmrevenue.com/redirect/123456", "_blank");
 
-          const url = `https://andymix1986.github.io/KING-PLAYER-ONLINE/player_0000.html?urlbase=${encodeURIComponent(baseUrl)}&id=${id}&titulo=${encodeURIComponent(titulo)}&total=${total}`;
-          window.location.href = url;
-        } else if (type === "EXT") {
-          const externalUrl = card.getAttribute('data-base-url');
-          window.location.href = externalUrl;
-        }
-      }, 3000);
+    setTimeout(() => {
+      if (type === "LOC") {
+        const baseUrl = card.getAttribute('data-base-url');
+        const id = card.getAttribute('data-id');
+        const titulo = card.getAttribute('data-titulo');
+        const total = card.getAttribute('data-total');
 
-      setTimeout(() => {
-        overlay.style.display = "none";
-      }, 10000);
-    });
+        const url = `https://andymix1986.github.io/KING-PLAYER-ONLINE/player_0000.html?urlbase=${encodeURIComponent(baseUrl)}&id=${id}&titulo=${encodeURIComponent(titulo)}&total=${total}`;
+        window.location.href = url;
+      } else if (type === "EXT") {
+        const externalUrl = card.getAttribute('data-base-url');
+        window.location.href = externalUrl;
+      }
+    }, 3000);
+
+    setTimeout(() => {
+      overlay.style.display = "none";
+    }, 10000);
   });
 });
 
