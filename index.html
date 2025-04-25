@@ -140,37 +140,49 @@ document.addEventListener("DOMContentLoaded", function () {
     .catch(error => console.error("Error cargando el archivo JSON:", error));
 });
 
-document.body.addEventListener("click", function (e) {
-  const card = e.target.closest('.card');
-  if (!card) return;
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.addEventListener("click", function (e) {
+    const card = e.target.closest('.card');
+    if (!card) return;
 
-  const type = card.getAttribute('data-type');
-  const overlay = document.getElementById("loadingOverlay");
-  const continueBtn = document.getElementById("continueBtn");
+    const type = card.getAttribute('data-type');
+    const overlay = document.getElementById("loadingOverlay");
+    const continueBtn = document.getElementById("continueBtn");
 
-  overlay.style.display = "flex";
-  continueBtn.style.display = "none";
-  window.open("https://example.adterra.link", "_blank");
+    // Mostrar el overlay y ocultar el botón por defecto
+    overlay.style.display = "flex";
+    continueBtn.style.display = "none";
 
-  setTimeout(() => {
-    continueBtn.style.display = "block";
-  }, 5000);
+    // ABRIR anuncio inmediatamente al click (evita bloqueo del navegador)
+    window.open("https://example.adterra.link", "_blank");
 
-  continueBtn.onclick = () => {
-    if (type === "LOC") {
-      const baseUrl = card.getAttribute('data-base-url');
-      const id = card.getAttribute('data-id');
-      const titulo = card.getAttribute('data-titulo');
-      const total = card.getAttribute('data-total');
+    // Mostrar botón para continuar luego de 5 segundos
+    setTimeout(() => {
+      continueBtn.style.display = "block";
+    }, 5000);
 
-      const url = `https://andymix1986.github.io/KING-PLAYER-ONLINE/player_0000.html?urlbase=${encodeURIComponent(baseUrl)}&id=${id}&titulo=${encodeURIComponent(titulo)}&total=${total}`;
-      window.location.href = url;
-    } else if (type === "EXT") {
-      const externalUrl = card.getAttribute('data-base-url');
-      window.location.href = externalUrl;
-    }
-  };
+    continueBtn.onclick = () => {
+      if (type === "LOC") {
+        const baseUrl = card.getAttribute('data-base-url');
+        const id = card.getAttribute('data-id');
+        const titulo = card.getAttribute('data-titulo');
+        const total = card.getAttribute('data-total');
+
+        const url = `https://andymix1986.github.io/KING-PLAYER-ONLINE/player_0000.html?urlbase=${encodeURIComponent(baseUrl)}&id=${id}&titulo=${encodeURIComponent(titulo)}&total=${total}`;
+        window.location.href = url;
+      } else if (type === "EXT") {
+        const externalUrl = card.getAttribute('data-base-url');
+        window.location.href = externalUrl;
+      }
+    };
+
+    // Ocultar overlay después de 15s por seguridad
+    setTimeout(() => {
+      overlay.style.display = "none";
+    }, 15000);
+  });
 });
+
 </script>
 
 </body>
