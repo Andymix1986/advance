@@ -193,9 +193,8 @@ opacity: 1 !important;
 
 <!-- Contenedor de sliders -->
 <div id="sliders"></div>
-<!-- Banner de OnclickA al final de la página -->
-<div id="banner-onclicka" style="width: 100%; text-align: center; margin-top: 40px;">
-  <script async src="https://js.onclckmn.com/static/onclicka.js" data-admpid="322235"></script>
+<div id="loadingOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000c;color:white;display:flex;align-items:center;justify-content:center;font-size:20px;z-index:9999;">
+  Redirigiendo al contenido...
 </div>
 </body>
 
@@ -304,24 +303,34 @@ localStorage.setItem('version', newVersionFromJson);
 location.reload();
 });
 
-    // Abre el enlace al player
     document.addEventListener("click", (e) => {
-  const card = e.target.closest('.card');
-  if (card) {
-    const type = card.getAttribute('data-type');
-    if (type === "LOC") {
-      const baseUrl = card.getAttribute('data-base-url');
-      const id = card.getAttribute('data-id');
-      const titulo = card.getAttribute('data-titulo');
-      const total = card.getAttribute('data-total');
-      // Cambiar la URL a la externa en lugar del archivo local
-      const externalUrl = `https://andymix1986.github.io/KING-PLAYER-ONLINE/player_0000.html?urlbase=${encodeURIComponent(baseUrl)}&id=${id}&titulo=${encodeURIComponent(titulo)}&total=${total}`;
-      window.location.href = externalUrl; // Redirige a la URL externa
-    } else if (type === "EXT") {
-      const externalUrl = card.getAttribute('data-base-url');
-      window.location.href = externalUrl;
-    }
-  }
+  const card = e.target.closest('.card');
+  if (card) {
+    const type = card.getAttribute('data-type');
+
+    // Mostrar overlay de carga
+    document.getElementById("loadingOverlay").style.display = "flex";
+
+    // Abrir anuncio en nueva pestaña (no bloquea navegación principal)
+    window.open("https://www.highcpmrevenue.com/redirect/123456", "_blank"); // Cambiá por tu link real
+
+    // Espera 3 segundos y luego redirige al contenido
+    setTimeout(() => {
+      if (type === "LOC") {
+        const baseUrl = card.getAttribute('data-base-url');
+        const id = card.getAttribute('data-id');
+        const titulo = card.getAttribute('data-titulo');
+        const total = card.getAttribute('data-total');
+
+        const externalUrl = `https://andymix1986.github.io/KING-PLAYER-ONLINE/player_0000.html?urlbase=${encodeURIComponent(baseUrl)}&id=${id}&titulo=${encodeURIComponent(titulo)}&total=${total}`;
+        window.location.href = externalUrl;
+
+      } else if (type === "EXT") {
+        const externalUrl = card.getAttribute('data-base-url');
+        window.location.href = externalUrl;
+      }
+    }, 3000);
+  }
 });
 
 // Lazy load con IntersectionObserver
